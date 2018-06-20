@@ -1,0 +1,91 @@
+﻿@using QuanLyNhanSu.Models
+@model List<LuanChuyenNhanVien>
+
+@{
+    ViewBag.Title = "Quá trình công tác";
+}
+
+<div class="">
+    <div class="">
+        <h1 class="page-header">
+            Quá trình công tác
+        </h1>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-dashboard"></i> <a href="@Url.Action("index","Admin")">Tổng quan</a>
+            </li>
+            <li>
+                <i class="fa fa-fw fa-tasks"></i><a href="@Url.Action("index","QuanLyPhongBan")">Phòng ban</a>
+            </li>
+            <li>
+                <i class="fa fa-bar-chart-o"></i> <a href="@Url.Action("index","QuanLyUser")">Nhân viên</a>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table id="table-taikhoan" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr class="success">
+                <th>
+                    Mã nhân viên
+                </th>
+                <th>
+                    Phòng ban cũ
+                </th>
+                <th>
+                    Phòng ban chuyển đến
+                </th>
+                <th>
+                    Lý do
+                </th>
+                <th>
+                    Ngày chuyển
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NhanVien.MaNhanVien)
+                    </td>
+                    @{
+                QuanLyNhanSuEntities db = new QuanLyNhanSuEntities();
+                String chuyendi = String.Empty;
+                String chuyenden = String.Empty;
+                foreach (var pb in db.PhongBans)
+                {
+                    if (pb.MaPhongBan.Equals(item.PhongBanChuyen))
+                    {
+                        chuyendi = pb.TenPhongBan;
+                    }
+                    if (pb.MaPhongBan.Equals(item.PhongBanDen))
+                    {
+                        chuyenden = pb.TenPhongBan;
+                    }
+
+                }
+                    }
+                    <td>
+                        @chuyendi
+                    </td>
+                    <td>
+                        @chuyenden
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LyDoChuyen)
+                    </td>
+                    <td>
+                        @string.Format("{0:dd/MM/yyyy}", item.NgayChuyen)
+                    </td>
+
+
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>

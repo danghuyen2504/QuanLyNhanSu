@@ -1,0 +1,129 @@
+﻿@using QuanLyNhanSu.Models
+@model List<NhanVien>
+
+@{
+    ViewBag.Title = "Nhân viên";
+}
+@{
+    QuanLyNhanSuEntities db = new QuanLyNhanSuEntities();
+    var td = db.TrinhDoHocVans.ToList();
+}
+
+<div class="">
+    <div class="">
+        <h1 class="page-header">
+            Nhân viên
+        </h1>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-dashboard"></i> <a href="@Url.Action("index","Admin")">Tổng quan</a>
+            </li>
+            <li>
+                <i class="fa fa-user"></i> @*<a href="@Url.Action("index","QuanLyUser")">Nhân viên</a>*@
+                Nhân viên
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div>
+    <div style="padding:10px">
+        <a class="btn btn-primary" href="@Url.Action("ThemUser", "QuanLyUser")">
+            Thêm nhân viên
+        </a>
+
+        <a class="btn btn-primary " href="@Url.Action("XuatFileExel", "QuanLyUser")">
+            Xuất danh sách nhân viên
+        </a>
+    </div>
+</div>
+
+
+
+
+<div class="table-responsive">
+    <table id="table-taikhoan" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr class="success">
+                <th>
+                    Mã nhân viên
+                </th>
+                <th>
+                    Họ tên
+                </th>
+                <th>
+                    Trình độ văn hóa
+                </th>
+                <th>
+                    Giới tính
+                </th>
+                <th>
+                    Ngày bắt đầu
+                </th>
+                <th>
+                    Số lượng: @Model.Count
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var item in Model)
+                {
+                    string tenTrinhDo = string.Empty;
+                    string gioitinh = string.Empty;
+                    switch (item.GioiTinh)
+                    {
+                        case 0:
+                            gioitinh = "Nữ";
+                            break;
+                        case 1:
+                            gioitinh = "Nam";
+                            break;
+                        default:
+                            gioitinh = "Khác";
+                            break;
+                    }
+
+
+                    foreach (var t in td)
+                    {
+                        if (t.MaTrinhDoHocVan.Equals(item.MaTrinhDoHocVan))
+                        {
+                            tenTrinhDo = t.TenTrinhDo;
+                            break;
+                        }
+                    }
+
+                    <tr>
+                        <td>@item.MaNhanVien</td>
+                        <td>@item.HoTen</td>
+                        <td>@tenTrinhDo</td>
+                        <td>@gioitinh</td>
+                        <td>
+                            @String.Format("{0:dd/MM/yyyy}", @item.HopDong.NgayBatDau)
+                        @{
+                    DateTime ngaydau = Convert.ToDateTime(@item.HopDong.NgayBatDau);
+                    DateTime ngaysau = DateTime.Now.Date;
+                    TimeSpan Times = ngaysau - ngaydau;
+                    
+                    int sonam = (int)Times.Days/365;
+                    
+                        }
+                       
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" href="@Url.Action("QuaTrinhCongTac", "QuanLyUser", new { @id = @item.MaNhanVien })"><i class="fa fa-address-book"></i>Quá trình công tác</a>
+                        <a class="btn btn-info" href="@Url.Action("QuaTrinhHoc", "QuanLyUser", new { @id = @item.MaNhanVien})">Học vấn</a>
+                        <a class="btn btn-warning" href="@Url.Action("UpdateUser", "QuanLyUser", new {@id = @item.MaNhanVien })"><i class="fa fa-pencil-square-o x5" aria-hidden="true"></i>Sửa</a>
+                        <a class="btn btn-danger" href="@Url.Action("XoaUser", "QuanLyUser", new { @id = @item.MaNhanVien })"><i class="fa fa-trash-o"></i>Xóa</a>
+                    </td>
+                </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+
+

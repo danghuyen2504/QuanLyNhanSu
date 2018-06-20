@@ -1,0 +1,71 @@
+﻿@model IEnumerable<QuanLyNhanSu.Models.KhenThuong>
+
+@{
+    ViewBag.Title = "Danh sách khen thưởng";
+}
+
+
+<div class="">
+    <div class="">
+        <h1 class="page-header">
+            Khen thưởng nhân viên
+        </h1>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-dashboard"></i> <a href="@Url.Action("index","Admin")">Tổng quan</a>
+            </li>
+            <li>
+                <i class="fa fa-money"></i> Khen thưởng
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+<div style="margin:10px">
+
+    <a class="btn btn-primary" href="@Url.Action("khen", "KhenThuong")">Khen Thưởng</a>
+</div>
+
+<table id="table-taikhoan" class="table table-responsive table-bordered table-striped">
+    <thead>
+        <tr class="success">
+            <th>
+                Mã nhân viên
+            </th>
+            <th>
+                Tháng thưởng
+            </th>
+            <th>
+                Lý do
+            </th>
+            <th>
+                Tiền thưởng
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NhanVien.MaNhanVien)
+                </td>
+                <td>
+                    @String.Format("{0:dd/MM/yyyy}", @item.ThangThuong)
+                    
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LyDo)
+                </td>
+                <td>
+                    @string.Format("{0:#,#}", @item.TienThuong).Replace(",", ",")
+                    
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+

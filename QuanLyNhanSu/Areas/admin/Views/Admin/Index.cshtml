@@ -1,0 +1,174 @@
+﻿@{
+    ViewBag.Title = "Admin";
+}
+
+@using QuanLyNhanSu.Models
+@{
+    QuanLyNhanSuEntities db = new QuanLyNhanSuEntities();
+}
+<!-- Navigation -->
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="">
+            <div class="">
+                <h1 class="page-header">
+                   Tổng quan hệ thống quản lý 
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i> Tổng quan
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <!-- nhan vien-->
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-yellow">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-user fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                @{
+                                    var count = db.NhanViens.Where(n=>n.TrangThai==true).ToList().Count - 1;
+                                }
+                                <div class="huge">@count</div>
+
+                                <div>Tổng số nhân viên</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("index","QuanLyUser")">
+                        <div class="panel-footer">
+                            <span class="pull-left">Xem chi tiết</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!--Tong luong -->
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            
+                                <div class="col-xs-3">
+
+                                    <i class="fa fa-money fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                @{
+                                    var luong = db.Luongs.ToList();
+                                    double tong = 0;
+                                    foreach (var item in luong)
+                                    {
+                                        double tienthue = 0, phucap = 0,luongcb=0,xh=0,yt=0,tn=0;
+                                       
+                                        item.HeSoLuong = item.HeSoLuong == null ? 0 : item.HeSoLuong;
+                                        luongcb = item.LuongToiThieu * (double)item.HeSoLuong;
+
+                                        item.BHXH = item.BHXH == null ? 0 : item.BHXH;
+                                        xh = (double)item.BHXH * item.LuongToiThieu / 100;
+
+                                        item.BHYT = item.BHYT == null ? 0 : item.BHYT;
+                                        yt = (double)item.BHYT * item.LuongToiThieu / 100;
+
+                                        item.BHTN = item.BHTN == null ? 0 : item.BHTN;
+                                        tn = (double)item.BHTN * item.LuongToiThieu / 100;
+
+
+                                        item.PhuCap = item.PhuCap == null ? 0 : item.PhuCap;
+                                        phucap = item.LuongToiThieu * (double)item.PhuCap;
+                                    
+                                        item.ThueThuNhap = item.ThueThuNhap == null ? 0 : item.ThueThuNhap;
+                                        tienthue = item.LuongToiThieu * (int)item.ThueThuNhap / 100;
+                                       
+                                        tong = tong + (double)luongcb - (double)(xh + yt + tn) - (double)tienthue + (double)phucap;
+                                       
+                                    }
+
+                                }
+
+                                <div class="huge">
+                                <span> @luong.Count</span>
+                                </div>
+                                <div>Tổng số bảng lương</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("index","QuanLyLuong")">
+                        <div class="panel-footer">
+                            <span class="pull-left">Tạm tính: @string.Format("{0:#,#}", @tong).Replace(",", ",") vnđ</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!--so phong ban-->
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-tasks fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                @{
+                                    var countPb = db.PhongBans.ToList().Count;
+                                }
+                                <div class="huge">@countPb</div>
+                                <div>Tổng số phòng ban</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("index","QuanLyPhongBan")">
+                        <div class="panel-footer">
+                            <span class="pull-left">Xem phòng ban</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+           
+            <!--tuoi  trung binh nhan vien -->
+             <div class="col-lg-3 col-md-6">
+                <div class="panel panel-red">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-support fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                @{
+                                    var khen = db.KhenThuongs.ToList().Count();
+                                }
+                                <div class="huge">@khen</div>
+                                <div>khen thưởng</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("index","KhenThuong")">
+                        <div class="panel-footer">
+                            <span class="pull-left">Chi tiết</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<!-- /#page-wrapper -->
